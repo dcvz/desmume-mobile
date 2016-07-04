@@ -1,4 +1,4 @@
-#include "main.h"
+#include "android.h"
 #include "../NDSSystem.h"
 #include "video.h"
 #include <android/bitmap.h>

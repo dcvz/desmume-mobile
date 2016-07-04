@@ -29,7 +29,7 @@
 #include "utils/guid.h"
 #include "utils/md5.h"
 
-#ifdef DESMUME_IOS
+#ifdef ANDROID
 #include "utils/xstring.h"
 #endif
 

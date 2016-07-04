@@ -16,7 +16,6 @@
 */
 
 #include "common.h"
-#include "main.h"
 #include "driver.h"
 //#include <windows.h>
 #include <stdio.h>
@@ -32,6 +31,10 @@
 //#include "resource.h"
 #include "OpenArchive.h"
 
+#ifdef ANDROID
+#include "android.h"
+#endif
+
 static char Str_Tmp[1024];
 
 #ifndef ANDROID
@@ -42,7 +45,6 @@ static HWND s_parentHWND = NULL;
 void SetArchiveParentHWND(void* hwnd) { s_parentHWND = (HWND)hwnd; }
 static HWND GetArchiveParentHWND() { return s_parentHWND ? s_parentHWND : MainWindow->getHWnd(); }
 #else
-#include "main.h"
 #define _stricmp strcasecmp
 #define _strnicmp strncasecmp
 extern char androidTempPath[1024];

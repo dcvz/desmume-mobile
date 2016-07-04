@@ -32,7 +32,7 @@
 #else
 #include <glib.h>
 #endif /* !WXPORT */
-#elif !defined(DESMUME_COCOA) && !defined(DESMUME_IOS)
+#elif !defined(DESMUME_COCOA) && !defined(ANDROID) && !defined(DESMUME_IOS)
 #include <glib.h>
 #endif /* _WINDOWS */
 
@@ -132,7 +132,9 @@ public:
 
 	void LoadModulePath()
 	{
-#if defined(_WINDOWS)
+#ifdef ANDROID
+		return; //set from java
+#elif defined(_WINDOWS)
 
 		char *p;
 		ZeroMemory(pathToModule, sizeof(pathToModule));
@@ -164,6 +166,8 @@ public:
 #ifdef _WINDOWS
 		std::string temp = (std::string)"." + DIRECTORY_DELIMITER_CHAR + pathToDefault;
 		strncpy(pathToDefault, temp.c_str(), maxCount);
+#elif ANDROID
+		snprintf(pathToDefault, maxCount, "%s/%s", pathToModule, key); 
 #else
 		strncpy(pathToDefault, pathToModule, maxCount);
 #endif

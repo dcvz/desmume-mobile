@@ -34,7 +34,7 @@
 
 #ifndef _MSC_VER
 #include <unistd.h>
-#ifndef DESMUME_IOS
+#if !defined(ANDROID) && !defined(DESMUME_IOS)
 #include <sys/dir.h>
 #endif
 #endif

@@ -6983,7 +6983,7 @@ static void ResetCodeBuffer()
 
 	s_CodeBuffer->Reset();
 
-	//FlushIcacheSection(base, base + size);
+	FlushIcacheSection(base, base + size);
 }
 
 static u8* AllocCodeBuffer(size_t size)

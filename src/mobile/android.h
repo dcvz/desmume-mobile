@@ -15,7 +15,7 @@
 	along with the this software.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*#ifndef _MAIN_H
+#ifndef _MAIN_H
 #define _MAIN_H
 
 #include <jni.h>
@@ -45,4 +45,4 @@ extern "C" {
 
 extern unsigned int frameCount;
 
-#endif*/
+#endif

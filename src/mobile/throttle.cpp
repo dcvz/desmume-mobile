@@ -22,13 +22,7 @@
 #include "../common.h"
 #include "../types.h"
 #include "../debug.h"
-#ifdef DESMUME_IOS
-#include <mach/mach.h>
-#include <mach/mach_time.h>
-#include <sys/time.h>
-#include <time.h>
-#endif
-#ifndef DESMUME_IOS
+#if !defined(ANDROID) && !defined(DESMUME_IOS)
 #include "../console.h"
 #endif
 #include "throttle.h"
@@ -39,7 +33,7 @@ static u64 tmethod,tfreq,afsfreq;
 static const u64 core_desiredfps = 3920763; //59.8261
 static u64 desiredfps = core_desiredfps;
 static float desiredspf = 65536.0f / core_desiredfps;
-#ifdef DESMUME_IOS
+#if defined(ANDROID) || defined(DESMUME_IOS)
 static int desiredFpsScalerIndex = 5;
 #else
 static int desiredFpsScalerIndex = GetPrivateProfileInt("Video","FPS Scaler Index", 5, IniName);
@@ -61,6 +55,18 @@ static u64 desiredFpsScalers [] = {
 	16,
 };
 
+#ifdef ANDROID
+#include <android/log.h>
+#endif
+
+#ifdef DESMUME_IOS
+#include <mach/mach.h>
+#include <mach/mach_time.h>
+#endif
+
+#if defined(ANDROID) || defined(DESMUME_IOS)
+#include <sys/time.h>
+#include <time.h>
 unsigned int GetTickCount()
 {
 	timeval timer;
@@ -71,12 +77,12 @@ unsigned int GetTickCount()
 #if 0
 unsigned long long RawGetTickCount()
 {
-    return clock();
+	return clock();
 }
 
 unsigned long long RawGetTickPerSecond()
 {
-    return (unsigned long long)CLOCKS_PER_SEC;
+	return (unsigned long long)CLOCKS_PER_SEC;
 }
 #else
 unsigned long long RawGetTickCount()
@@ -90,22 +96,25 @@ unsigned long long RawGetTickCount()
     }
     return now * timebase.numer / timebase.denom;
 #else
-    timespec timer;
-    clock_gettime(CLOCK_MONOTONIC, &timer);
-    return ((unsigned long long)timer.tv_sec * 1000000000ULL) + timer.tv_nsec;
+	timespec timer;
+	clock_gettime(CLOCK_MONOTONIC, &timer);
+	return ((unsigned long long)timer.tv_sec * 1000000000ULL) + timer.tv_nsec;
 #endif
 }
 
 unsigned long long RawGetTickPerSecond()
 {
-    return 1000000000ULL;
+	return 1000000000ULL;
 }
 #endif
 
 void Sleep(int ms)
 {
+	//__android_log_print(ANDROID_LOG_INFO,"nds4droid","Sleep of %i ms",ms);
 	usleep(ms * 1000);
 }
+
+#endif
 
 void IncreaseSpeed(void) {
 
@@ -116,7 +125,7 @@ void IncreaseSpeed(void) {
 	desiredspf = 65536.0f / desiredfps;
 	printf("Throttle fps scaling increased to: %f\n",desiredFpsScaler/256.0);
 	osd->addLine("Target FPS up to %2.04f",desiredFpsScaler/256.0);
-	#ifndef DESMUME_IOS
+	#if !defined(ANDROID) && !defined(DESMUME_IOS)
 	WritePrivateProfileInt("Video","FPS Scaler Index", desiredFpsScalerIndex, IniName);
 	#endif
 }
@@ -130,14 +139,14 @@ void DecreaseSpeed(void) {
 	desiredspf = 65536.0f / desiredfps;
 	printf("Throttle fps scaling decreased to: %f\n",desiredFpsScaler/256.0);
 	osd->addLine("Target FPS down to %2.04f",desiredFpsScaler/256.0);
-#ifndef DESMUME_IOS
+#if !defined(ANDROID) && !defined(DESMUME_IOS)
 	WritePrivateProfileInt("Video","FPS Scaler Index", desiredFpsScalerIndex, IniName);
 #endif
 }
 
 static u64 GetCurTime(void)
 {
-#ifndef DESMUME_IOS
+#if !defined(ANDROID) && !defined(DESMUME_IOS)
 	if(tmethod)
 	{
 		u64 tmp;
@@ -154,7 +163,7 @@ static u64 GetCurTime(void)
 void InitSpeedThrottle(void)
 {
 	tmethod=0;
-#ifndef DESMUME_IOS
+#if !defined(ANDROID) && !defined(DESMUME_IOS)
 	if(QueryPerformanceFrequency((LARGE_INTEGER*)&afsfreq))
 		tmethod=1;
 	else
@@ -190,7 +199,7 @@ waiter:
 			sleepy = 0;
 		if(sleepy >= 10)
 			Sleep((sleepy / 2)); // reduce it further beacuse Sleep usually sleeps for more than the amount we tell it to
-#ifndef DESMUME_IOS
+#if !defined(ANDROID) && !defined(DESMUME_IOS)
 		else if(sleepy > 0) // spin for <1 millisecond waits
 			SwitchToThread(); // limit to other threads on the same CPU core for other short waits
 #endif

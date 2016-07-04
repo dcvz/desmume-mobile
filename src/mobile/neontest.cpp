@@ -20,11 +20,12 @@ extern "C" {
 #include "math-neon/math_neon.h"
 }
 #include "../matrix.h"
-#include "main.h"
 #include <stdio.h>
 #include <string.h>
 
-#define LOGI(...) printf(__VA_ARGS__);printf("\n")
+#ifdef ANDROID
+#include "android.h"
+#endif
 
 template<int WIDTH, int HEIGHT> void printmatrix(float* matrix)
 {

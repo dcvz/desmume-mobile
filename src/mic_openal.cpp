@@ -18,10 +18,8 @@
 
 #ifndef WIN32
 
-//#include <AL/al.h>
-//#include <AL/alc.h>
-#include <OpenAL/al.h>
-#include <OpenAL/alc.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 
 #include "types.h"
 #include "mic.h"

@@ -17,10 +17,13 @@
 
 #include "SPU.h"
 #include "sndopensl.h"
-#include "main.h"
 
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
+
+#ifdef ANDROID
+#include "android.h"
+#endif
 
 int SNDOpenSLInit(int buffersize);
 void SNDOpenSLDeInit();

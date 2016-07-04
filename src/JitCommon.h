@@ -24,9 +24,7 @@
 
 #ifdef HAVE_JIT
 
-#if defined(_WINDOWS) || defined(DESMUME_IOS)
-#define MAPPED_JIT_FUNCS
-#elif defined(DESMUME_IOS)
+#if defined(_WINDOWS) || defined(DESMUME_COCOA) || defined(ANDROID) || defined(DESMUME_IOS)
 #define MAPPED_JIT_FUNCS
 #endif
 

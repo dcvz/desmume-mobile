@@ -26,10 +26,13 @@
 
 #include "../mic.h"
 #include "readwrite.h"
-#include "main.h"
 
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
+
+#ifdef ANDROID
+#include "android.h"
+#endif
 
 extern SLObjectItf engineObject;
 extern SLEngineItf engineEngine;
